@@ -47,8 +47,8 @@ func main() {
 	// Insert the admin user into the "users" table
 	_, err = db.Exec(
 		"INSERT INTO users (uuid, username, email, password, created_at, updated_at) "+
-			"VALUES ($1, $2, $3, $4, $5, $6, $7)",
-		uid, "admin", "admin@example.com", pass, true, time.Now(), time.Now())
+			"VALUES ($1, $2, $3, $4, $5, $6)",
+		uid, "admin", "admin@example.com", pass, time.Now(), time.Now())
 	if err != nil {
 		log.Fatal(err)
 	}

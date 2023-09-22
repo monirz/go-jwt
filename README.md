@@ -8,10 +8,11 @@ GoJWT is a simple Go (Golang) application that provides authentication using JSO
 
 ### Clone the Repository
 
-```bash
-git clone https://github.com/yourusername/gojwt.git
 ```
-cd gojwt
+$ git clone https://github.com/monirz/gojwt.git
+$ cd gojwt
+```
+
 Create JWT Keys
 To generate the JWT keys, you can use the following commands:
 
@@ -47,12 +48,25 @@ Endpoint: POST /api/v1/login
 
 ## Input (JSON)
 json
-Copy code
+
 {
   "email": "user@example.com",
   "password": "your_password"
 }
 Output (JSON)
+
+## Curl example 
+
+```
+ curl -X POST \
+  http://localhost:8090/api/v1/login \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "admin@example.com",
+    "password": "password"
+  }'
+```
+
 ```
 {
   "message": "Login successful",
@@ -61,22 +75,26 @@ Output (JSON)
 }
 ```
 Signup
-Endpoint: POST /api/v1/signup
+ Endpoint: POST /api/v1/signup 
 
 Input (JSON)
-json
-Copy code
+
+```
 {
   "email": "newuser@example.com",
   "password": "new_password",
   "username": "newusername"
 }
+```
+
+
 Output (JSON)
-json
-Copy code
+```
 {
   "message": "Signup successful"
 }
+```
+
 
 Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.

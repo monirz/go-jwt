@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,20 +13,22 @@ import (
 	"github.com/monirz/gojwt"
 	"github.com/monirz/gojwt/config"
 	"github.com/monirz/gojwt/middleware"
+	"github.com/monirz/gojwt/postgres"
 
 	"github.com/go-chi/chi"
 )
 
 type Server struct {
+	db          *sql.DB
 	router      *chi.Mux
 	Config      *config.Config
 	UserService gojwt.UserService
 }
 
-func NewServer() *Server {
+func NewServer(db *sql.DB) *Server {
 
 	// var err error
-	s := &Server{}
+	s := &Server{db: db}
 	s.Config = config.NewConfig()
 
 	s.router = chi.NewRouter()
@@ -50,6 +53,7 @@ func NewServer() *Server {
 
 func (s *Server) Run() {
 
+	s.UserService = postgres.NewUserService(s.db)
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
 

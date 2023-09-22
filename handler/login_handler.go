@@ -40,7 +40,7 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the provided password matches the user's stored password
-	if password != user.Password {
+	if !utils.CheckPasswordHash(password, user.Password) {
 		response.ResponseError(w, http.StatusUnauthorized, "Invalid credentials", nil)
 		return
 	}
@@ -51,6 +51,7 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 	// Generate access and refresh tokens for the user
 	accessToken, refreshToken, err := utils.GenerateTokens(email, accessTokenKey, refreshTokenKey)
 	if err != nil {
+		log.Println(err)
 		response.ResponseError(w, http.StatusInternalServerError, "Error generating access token", nil)
 		return
 	}

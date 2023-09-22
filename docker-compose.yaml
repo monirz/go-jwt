@@ -13,6 +13,9 @@ services:
       - DB_USER=postgres
       - DB_NAME=gojwt
       - DB_PORT=5432
+      - TOKEN_ISSUER=example.com
+      - ACCESS_TOKEN_VALIDITY=120
+      - REFRESH_TOKEN_VALIDITY=604800
     depends_on:
       db:
         condition: service_healthy

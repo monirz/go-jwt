@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/monirz/gojwt"
 )
@@ -41,9 +42,11 @@ func (u *UserService) FindByEmail(email string) (*gojwt.User, error) {
 	user := &gojwt.User{}
 	err := row.Scan(&user.ID, &user.UUID, &user.UserName, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 
+	log.Println("debug")
 	return user, nil
 }
 
