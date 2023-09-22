@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8090:8090
+    environment:
+      - PORT=8090
+      - DB_HOST=db
+      - DB_PASSWORD=password
+      - DB_USER=postgres
+      - DB_NAME=gojwt
+      - DB_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
+      # migrate:
+      #   condition: service_healthy
+      # run cmd/migrate/main.go to create a example user
+    command: ["sh", "-c", "sleep 10 && go run cmd/migrate/main.go && sleep 5 && ./server"]
+
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=gojwt
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Mount the named volume to the container's data directory
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: ["-path", "/migrations", "-database", "postgresql://postgres:password@db:5432/gojwt?sslmode=disable", "up"]
+    volumes:
+      - ./cmd/migrate/migrations:/migrations  # Adjust the path to your migrations directory
+
+volumes:
+  db_data:  # Define the named volume for the db service
